@@ -6,29 +6,29 @@ const start = () => {
 const A = () => {
     return new Promise(function (resolve, reject) {
         setTimeout(function () {
-            resolve('result of A Reject');
+            resolve('result of A');
         }, 1000);
     });
 }
 const B = () => {
     return new Promise(function (resolve, reject) {
         setTimeout(function () {
-            resolve('result of B Reject');
-        }, 1000);
+            resolve('result of B');
+        }, 3000);
     });
 }
 const C = () => {
     return new Promise(function (resolve, reject) {
         setTimeout(function () {
-            resolve('result of C Reject');
+            resolve('result of C');
         }, 1000);
     });
 }
 const D = () => {
     return new Promise(function (resolve, reject) {
         setTimeout(function () {
-            resolve('result of D Reject');
-        }, 1000);
+            resolve('result of D');
+        }, 2000);
     });
 }
 const end = () => {
@@ -40,20 +40,23 @@ start()
         console.log("Resolve Start")
         return Promise.all([D(), A()]);
     })
-    .then(() => {
-        console.log("Resolve D and A")
+    .then(([resultA, resultD]) => {
+        console.log("A and D resolved");
+        console.log(resultA, resultD);
+        return Promise.all([B(), resultD]); 
+    })
+    .then(([resultB, resultD]) => {
+        console.log("B resolved");
+        console.log(resultB);
         return C();
     })
-    .then(() => {
-        console.log("Resolve C ")
-        return B();
-    })
-    .then(() => {
-        console.log("Resolve B ")
+    .then((resultC) => {
+        console.log("C resolved");
+        console.log(resultC);
         return end();
     })
     .then(() => {
-        console.log("Resolve ENd ")
+        console.log("End resolved");
     })
     .catch((error) => {
         console.error(error);
